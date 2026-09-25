@@ -1,105 +1,462 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Happy Birthday!</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #1f4068, #162447);
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-            color: #fff;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>শুভ জন্মদিন! 🎂🎉</title>
+  
+  <!-- Font Awesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-        .container {
-            text-align: center;
-            z-index: 10;
-        }
+  <style>
+    :root {
+      --primary: #ff4757;
+      --secondary: #2ed573;
+      --accent: #ffa502;
+      --dark-bg: #0d0e15;
+      --card-bg: rgba(255, 255, 255, 0.08);
+    }
 
-        h1 {
-            font-size: 3.5rem;
-            margin-bottom: 10px;
-            animation: bounce 2s infinite;
-            color: #e43f5a;
-            text-shadow: 0 0 20px rgba(228, 63, 90, 0.6);
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Poppins', 'Segoe UI', sans-serif;
+    }
 
-        p {
-            font-size: 1.5rem;
-            color: #1abc9c;
-            animation: fadeIn 3s ease-in-out;
-        }
+    body {
+      background: radial-gradient(circle at center, #1b1c2e 0%, #08080f 100%);
+      color: #ffffff;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+    }
 
-        @keyframes bounce {
-            0%, 20%, 50%, 80%, 100% {transform: translateY(0);}
-            40% {transform: translateY(-20px);}
-            60% {transform: translateY(-10px);}
-        }
+    /* Floating Particles Background */
+    #bg-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+      pointer-events: none;
+    }
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+    .main-container {
+      position: relative;
+      z-index: 10;
+      max-width: 900px;
+      width: 100%;
+      margin-top: 30px;
+    }
 
-        /* Confetti styles */
-        .confetti {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #f00;
-            top: -10px;
-            animation: fall linear forwards;
-        }
+    /* Hero Section */
+    .hero-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 28px;
+      padding: 40px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 30px rgba(255, 71, 87, 0.2);
+      margin-bottom: 30px;
+    }
 
-        @keyframes fall {
-            to {
-                transform: translateY(105vh) rotate(360deg);
-            }
-        }
-    </style>
+    .birthday-title {
+      font-size: 3rem;
+      font-weight: 800;
+      background: linear-gradient(45deg, #ff4757, #ffa502, #2ed573, #1e90ff);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: gradientMove 6s ease infinite;
+      margin-bottom: 15px;
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .sub-title {
+      font-size: 1.2rem;
+      color: #e0e0e0;
+      margin-bottom: 25px;
+    }
+
+    /* Interactive Controls */
+    .btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .btn {
+      background: linear-gradient(135deg, var(--primary), #ff6b81);
+      border: none;
+      color: white;
+      padding: 14px 28px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: all 0.3s ease;
+      box-shadow: 0 8px 20px rgba(255, 71, 87, 0.3);
+    }
+
+    .btn:hover {
+      transform: translateY(-3px) scale(1.03);
+      box-shadow: 0 12px 25px rgba(255, 71, 87, 0.5);
+    }
+
+    .btn-alt {
+      background: linear-gradient(135deg, #2ed573, #26af5f);
+      box-shadow: 0 8px 20px rgba(46, 213, 115, 0.3);
+    }
+
+    .btn-alt:hover {
+      box-shadow: 0 12px 25px rgba(46, 213, 115, 0.5);
+    }
+
+    /* Birthday Cake Interactive Section */
+    .cake-section {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 24px;
+      padding: 30px;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .cake {
+      position: relative;
+      width: 150px;
+      height: 120px;
+      margin: 40px auto 20px auto;
+    }
+
+    .plate {
+      width: 200px;
+      height: 110px;
+      position: absolute;
+      bottom: -10px;
+      left: -25px;
+      background-color: #ccc;
+      border-radius: 50%;
+      box-shadow: 0 5px 0 #b3b3b3, 0 10px 10px rgba(0,0,0,0.5);
+    }
+
+    .layer {
+      position: absolute;
+      display: block;
+      width: 150px;
+      height: 40px;
+      border-radius: 50%;
+      background-color: #553c2a;
+    }
+
+    .layer-top { top: 0px; background-color: #ff7675; }
+    .layer-middle { top: 30px; background-color: #fdcb6e; }
+    .layer-bottom { top: 60px; background-color: #6c5ce7; }
+
+    .candle {
+      background-color: #fff;
+      width: 12px;
+      height: 45px;
+      border-radius: 6px/3px;
+      position: absolute;
+      top: -30px;
+      left: 69px;
+      z-index: 10;
+    }
+
+    .flame {
+      position: absolute;
+      background-color: orange;
+      width: 14px;
+      height: 25px;
+      border-radius: 10px 10px 10px 10px/25px 25px 10px 10px;
+      top: -20px;
+      left: -1px;
+      box-shadow: 0 0 10px orange, 0 0 20px yellow;
+      transform-origin: center bottom;
+      animation: flicker 0.1s ease-in infinite alternate;
+    }
+
+    .flame.off {
+      display: none;
+    }
+
+    @keyframes flicker {
+      0% { transform: rotate(-2deg) scale(1); }
+      100% { transform: rotate(2deg) scale(1.1); }
+    }
+
+    /* Dynamic Wishes Cards */
+    .grid-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .wish-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 18px;
+      padding: 20px;
+      transition: all 0.3s ease;
+    }
+
+    .wish-card:hover {
+      transform: translateY(-5px);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .wish-icon {
+      font-size: 2rem;
+      color: var(--accent);
+      margin-bottom: 10px;
+    }
+
+    /* Modal / Popup */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.8);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(8px);
+    }
+
+    .modal-content {
+      background: #1e1e2e;
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: 20px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      text-align: center;
+      position: relative;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      font-size: 1.5rem;
+      cursor: pointer;
+      color: #aaa;
+    }
+
+    .close-btn:hover { color: #fff; }
+
+  </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1 id="wishTitle">Happy Birthday! 🎉</h1>
-        <p>May your day be filled with lots of joy and laughter.</p>
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="main-container">
+    <!-- Hero Header -->
+    <div class="hero-card">
+      <h1 class="birthday-title">শুভ জন্মদিন! 🎂🎉</h1>
+      <p class="sub-title">আজকের বিশেষ দিনে আপনার জীবন সাফল্য, আনন্দ এবং ভালোবাসায় ভরে উঠুক!</p>
+      
+      <div class="btn-group">
+        <button class="btn" id="confettiBtn"><i class="fa-solid fa-gift"></i> সারপ্রাইজ ব্লাস্ট!</button>
+        <button class="btn btn-alt" id="musicToggleBtn"><i class="fa-solid fa-music"></i> গান শুনুন</button>
+      </div>
     </div>
 
-    <script>
-        // Dynamic Confetti Generator
-        function createConfetti() {
-            const confetti = document.createElement('div');
-            confetti.classList.add('confetti');
-            
-            // Random styling for dynamic effect
-            confetti.style.left = Math.random() * window.innerWidth + 'px';
-            confetti.style.backgroundColor = getRandomColor();
-            confetti.style.animationDuration = (Math.random() * 3 + 2) + 's';
-            confetti.style.opacity = Math.random();
-            confetti.style.transform = `scale(${Math.random() * 1.5 + 0.5})`;
+    <!-- Interactive Candle Blowing Section -->
+    <div class="cake-section">
+      <h2>🎂 মোমবাতি ফুঁ দিয়ে নেভান!</h2>
+      <p style="color: #bbb; margin-top: 5px;">নিচের বোতামটি চাপুন অথবা মাইকে ফুঁ দিন (যদি অনুমতি থাকে)</p>
+      
+      <div class="cake">
+        <div class="plate"></div>
+        <div class="layer layer-bottom"></div>
+        <div class="layer layer-middle"></div>
+        <div class="layer layer-top"></div>
+        <div class="candle">
+          <div class="flame" id="flame"></div>
+        </div>
+      </div>
 
-            document.body.appendChild(confetti);
+      <button class="btn" id="blowBtn" style="margin: 0 auto;"><i class="fa-solid fa-wind"></i> ফুঁ দিন (Blow Candle)</button>
+    </div>
 
-            // Remove after animation ends
-            setTimeout(() => {
-                confetti.remove();
-            }, 5000);
+    <!-- Dynamic Wish Cards -->
+    <div class="grid-container">
+      <div class="wish-card">
+        <div class="wish-icon"><i class="fa-solid fa-heart"></i></div>
+        <h3>সুস্বাস্থ্য ও দীর্ঘায়ু</h3>
+        <p style="color: #ccc; margin-top: 8px;">আপনার আগামী দিনগুলো নিরোগ এবং শক্তিতে ভরপুর থাকুক।</p>
+      </div>
+
+      <div class="wish-card">
+        <div class="wish-icon"><i class="fa-solid fa-star"></i></div>
+        <h3>স্বপ্নের জয়</h3>
+        <p style="color: #ccc; margin-top: 8px;">আপনার অধরা সব স্বপ্ন সত্যিতে রূপান্তরিত হোক।</p>
+      </div>
+
+      <div class="wish-card">
+        <div class="wish-icon"><i class="fa-solid fa-smile"></i></div>
+        <h3>অসীম আনন্দ</h3>
+        <p style="color: #ccc; margin-top: 8px;">প্রতিটি মুহূর্তে মুখে লেগে থাকুক অনাবিল হাসি।</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Special Secret Modal -->
+  <div class="modal" id="surpriseModal">
+    <div class="modal-content">
+      <span class="close-btn" id="closeModal">&times;</span>
+      <h2 style="color: var(--accent); margin-bottom: 15px;">🎉 বিশেষ বার্তা! 🎁</h2>
+      <p id="dynamicWishMessage" style="line-height: 1.6; color: #ddd;"></p>
+      <button class="btn" id="modalActionBtn" style="margin: 20px auto 0 auto;">ধন্যবাদ! ❤️</button>
+    </div>
+  </div>
+
+  <!-- Audio File -->
+  <audio id="birthdayAudio" loop src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a731d1.mp3?filename=happy-birthday-109228.mp3"></audio>
+
+  <!-- JavaScript Dynamic Logic -->
+  <script>
+    // Audio Player System
+    const audio = document.getElementById('birthdayAudio');
+    const musicBtn = document.getElementById('musicToggleBtn');
+    let isPlaying = false;
+
+    musicBtn.addEventListener('click', () => {
+      if (isPlaying) {
+        audio.pause();
+        musicBtn.innerHTML = `<i class="fa-solid fa-music"></i> গান শুনুন`;
+      } else {
+        audio.play();
+        musicBtn.innerHTML = `<i class="fa-solid fa-pause"></i> গান বন্ধ করুন`;
+      }
+      isPlaying = !isPlaying;
+    });
+
+    // Candle Blow System
+    const flame = document.getElementById('flame');
+    const blowBtn = document.getElementById('blowBtn');
+
+    blowBtn.addEventListener('click', () => {
+      if (!flame.classList.contains('off')) {
+        flame.classList.add('off');
+        blowBtn.innerHTML = `<i class="fa-solid fa-rotate-left"></i> আবার মোমবাতি জ্বালান`;
+        triggerConfettiBurst();
+      } else {
+        flame.classList.remove('off');
+        blowBtn.innerHTML = `<i class="fa-solid fa-wind"></i> ফুঁ দিন (Blow Candle)`;
+      }
+    });
+
+    // Confetti System
+    const confettiBtn = document.getElementById('confettiBtn');
+    
+    function triggerConfettiBurst() {
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+    }
+
+    confettiBtn.addEventListener('click', () => {
+      triggerConfettiBurst();
+      showSurpriseModal();
+    });
+
+    // Modal Wishes Engine
+    const modal = document.getElementById('surpriseModal');
+    const closeModal = document.getElementById('closeModal');
+    const wishMsg = document.getElementById('dynamicWishMessage');
+    const modalActionBtn = document.getElementById('modalActionBtn');
+
+    const wishesArray = [
+      "আজকের দিনটি আপনার জন্য নিয়ে আসুক অজস্র আলো আর ভালোবাসা! জীবনের প্রতিটি পদক্ষেপে আপনি যেন সাফল্য অর্জন করতে পারেন।",
+      "শুভ জন্মদিন! ঈশ্বর আপনার জীবনের সমস্ত ইচ্ছা পূরণ করুন এবং আপনাকে সবসময় সুখে ও শান্তিতে রাখুন। 🎂🌟",
+      "আপনার স্পেশাল দিনে অনেক অনেক শুভেচ্ছা! সবসময় এভাবে হাসিখুশি থাকুন এবং চারপাশে আনন্দ ছড়িয়ে দিন। ❤️"
+    ];
+
+    function showSurpriseModal() {
+      const randomWish = wishesArray[Math.floor(Math.random() * wishesArray.length)];
+      wishMsg.innerText = randomWish;
+      modal.style.display = 'flex';
+    }
+
+    closeModal.addEventListener('click', () => modal.style.display = 'none');
+    modalActionBtn.addEventListener('click', () => modal.style.display = 'none');
+
+    // Canvas Background Particles Engine
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
+
+    window.addEventListener('resize', () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    });
+
+    class Star {
+      constructor() {
+        this.x = Math.random() * width;
+        this.y = Math.random() * height;
+        this.size = Math.random() * 2;
+        this.speed = Math.random() * 0.5 + 0.1;
+      }
+      update() {
+        this.y -= this.speed;
+        if (this.y < 0) {
+          this.y = height;
+          this.x = Math.random() * width;
         }
+      }
+      draw() {
+        ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
 
-        function getRandomColor() {
-            const colors = ['#f39c12', '#e74c3c', '#9b59b6', '#3498db', '#2ecc71', '#f1c40f'];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
+    const stars = Array.from({ length: 100 }, () => new Star());
 
-        // Generate confetti continuously
-        setInterval(createConfetti, 100);
-    </script>
+    function renderLoop() {
+      ctx.clearRect(0, 0, width, height);
+      stars.forEach(star => {
+        star.update();
+        star.draw();
+      });
+      requestAnimationFrame(renderLoop);
+    }
+
+    renderLoop();
+  </script>
 </body>
 </html>
